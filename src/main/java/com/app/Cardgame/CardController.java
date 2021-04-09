@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/card")
+@RequestMapping(path = "/cards")
 public class CardController {
 	@Autowired
-	ICardService service;
+	ICardService cService;
 
 	@GetMapping("/hello")
 	public @ResponseBody String hello() {
@@ -23,43 +23,43 @@ public class CardController {
 
 	@PostMapping("/addcards")
 	public void addCards() {
-		service.saveOrUpdate(new Card("dog", "perro"));
-		service.saveOrUpdate(new Card("cat", "gato"));
-		service.saveOrUpdate(new Card("flower", "flor"));
+		cService.saveOrUpdate(new Card("dog", "perro"));
+		cService.saveOrUpdate(new Card("cat", "gato"));
+		cService.saveOrUpdate(new Card("flower", "flor"));
 	}
 
 	@GetMapping("/getall")
 	public Iterable<Card> getAll() {
-		return service.findAll();
+		return cService.findAll();
 	}
 
 	@GetMapping("/getbyid/{id}")
 	public Card getById(@PathVariable("id") String id) throws CardNotFoundException {
-		return service.findById(id);
+		return cService.findById(id);
 	}
 
 	@GetMapping("/getbyenglish/{english}")
 	public Card getByEnglish(@PathVariable("english") String english) throws CardNotFoundException {
-		return service.findByEnglish(english);
+		return cService.findByEnglish(english);
 	}
 
 	@GetMapping("/getbyspanish/{spanish}")
 	public Card getBySpanish(@PathVariable("spanish") String spanish) throws CardNotFoundException {
-		return service.findByEnglish(spanish);
+		return cService.findByEnglish(spanish);
 	}
 
 	@PostMapping("/save")
 	public void saveOrUpdate(@RequestBody Card card) {
-		service.saveOrUpdate(card);
+		cService.saveOrUpdate(card);
 	}
 
 	@DeleteMapping("/deletebyid/{id}")
 	public void deleteById(@PathVariable("id") String id) {
-		service.deleteById(id);
+		cService.deleteById(id);
 	}
 
 	@DeleteMapping("/deleteall")
 	public void deleteAllPerson() {
-		service.deleteAll();
+		cService.deleteAll();
 	}
 }

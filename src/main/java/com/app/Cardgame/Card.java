@@ -3,7 +3,7 @@ package com.app.Cardgame;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "card")
+@Document(collection = "cards")
 public class Card {
 
 	@Id

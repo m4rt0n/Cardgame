@@ -10,45 +10,45 @@ import org.springframework.stereotype.Service;
 public class CardService implements ICardService {
 
 	@Autowired
-	CardRepository repo;
+	CardRepository cRepo;
 
 	@Override
 	public List<Card> findAll() {
-		return repo.findAll();
+		return cRepo.findAll();
 	}
 
 	@Override
 	public Card findById(String id) throws CardNotFoundException {
-		return repo.findById(id).orElseThrow(() -> new CardNotFoundException(id));
+		return cRepo.findById(id).orElseThrow(() -> new CardNotFoundException(id));
 	}
 
 	@Override
 	public Card findByEnglish(String english) throws CardNotFoundException {
-		List<Card> list = repo.findAll();
+		List<Card> list = cRepo.findAll();
 		Optional<Card> found = list.stream().filter(c -> c.getEnglish().equals(english)).findFirst();
 		return found.orElseThrow(() -> new CardNotFoundException(english));
 	}
 
 	@Override
 	public Card findBySpanish(String spanish) throws CardNotFoundException {
-		List<Card> list = repo.findAll();
+		List<Card> list = cRepo.findAll();
 		Optional<Card> found = list.stream().filter(c -> c.getSpanish().equals(spanish)).findFirst();
 		return found.orElseThrow(() -> new CardNotFoundException(spanish));
 	}
 
 	@Override
 	public Card saveOrUpdate(Card card) {
-		return repo.save(card);
+		return cRepo.save(card);
 	}
 
 	@Override
 	public void deleteById(String id) {
-		repo.deleteById(id);
+		cRepo.deleteById(id);
 	}
 
 	@Override
 	public void deleteAll() {
-		repo.deleteAll();
+		cRepo.deleteAll();
 
 	}
 
