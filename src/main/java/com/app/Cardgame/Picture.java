@@ -11,9 +11,13 @@ public class Picture {
 	private String title;
 	private Binary image;
 
-	public Picture(String title) {
-		super();
+	public Picture() {
+
+	}
+
+	public Picture(String title, Binary image) {
 		this.title = title;
+		this.image = image;
 	}
 
 	public String getId() {

@@ -1,12 +1,11 @@
 package com.app.Cardgame;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
-import org.bson.BsonBinarySubType;
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PictureService implements IPictureService {
@@ -17,10 +16,18 @@ public class PictureService implements IPictureService {
 		return pRepo.findById(id).orElseThrow(() -> new PictureNotFoundException(id));
 	}
 
-	public String saveOrUpdate(String title, MultipartFile file) throws IOException {
-		Picture p = new Picture(title);
-		p.setImage(new Binary(BsonBinarySubType.BINARY, file.getBytes()));
-		p = pRepo.insert(p);
-		return p.getId();
+	@Override
+	public Picture findByTitle(String title) throws PictureNotFoundException {
+		List<Picture> pList = pRepo.findAll();
+		Optional<Picture> foundPicture = pList.stream().filter(p -> p.getTitle().equals(title)).findFirst();
+		return foundPicture.orElseThrow(() -> new PictureNotFoundException(title));
+
 	}
+
+	@Override
+	public String save(Picture p) throws IOException {
+		pRepo.insert(p);
+		return String.format("picture saved: %s", p.getTitle());
+	}
+
 }

@@ -10,6 +10,7 @@ public class Card {
 	private String id;
 	private String english;
 	private String spanish;
+	private Picture picture;
 
 	public Card() {
 	}
@@ -43,8 +44,16 @@ public class Card {
 		this.spanish = spanish;
 	}
 
+	public Picture getPicture() {
+		return picture;
+	}
+
+	public void setPicture(Picture picture) {
+		this.picture = picture;
+	}
+
 	@Override
 	public String toString() {
-		return String.format("Card[id=%s, english=%s, spanish=%s]", id, english, spanish);
+		return String.format("Card[id=%s, english=%s, spanish=%s, picture=%s]", id, english, spanish, picture);
 	}
 }

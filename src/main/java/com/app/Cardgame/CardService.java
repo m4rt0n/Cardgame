@@ -32,8 +32,8 @@ public class CardService implements ICardService {
 	@Override
 	public Card findBySpanish(String spanish) throws CardNotFoundException {
 		List<Card> list = cRepo.findAll();
-		Optional<Card> found = list.stream().filter(c -> c.getSpanish().equals(spanish)).findFirst();
-		return found.orElseThrow(() -> new CardNotFoundException(spanish));
+		Optional<Card> foundCard = list.stream().filter(c -> c.getSpanish().equals(spanish)).findFirst();
+		return foundCard.orElseThrow(() -> new CardNotFoundException(spanish));
 	}
 
 	@Override
