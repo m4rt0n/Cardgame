@@ -1,13 +1,11 @@
 package com.app.Cardgame;
 
 import org.bson.types.Binary;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "pictures")
 public class Picture {
-	@Id
-	private String id;
+
 	private String title;
 	private Binary image;
 
@@ -18,14 +16,6 @@ public class Picture {
 	public Picture(String title, Binary image) {
 		this.title = title;
 		this.image = image;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getTitle() {
@@ -46,6 +36,6 @@ public class Picture {
 
 	@Override
 	public String toString() {
-		return "Picture [id=" + id + ", title=" + title + ", image=" + image + "]";
+		return "Picture [title=" + title + ", image=" + image + "]";
 	}
 }

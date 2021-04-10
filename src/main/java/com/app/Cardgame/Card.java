@@ -15,9 +15,10 @@ public class Card {
 	public Card() {
 	}
 
-	public Card(String english, String spanish) {
+	public Card(String english, String spanish, Picture picture) {
 		this.english = english;
 		this.spanish = spanish;
+		this.picture = picture;
 	}
 
 	public String getId() {

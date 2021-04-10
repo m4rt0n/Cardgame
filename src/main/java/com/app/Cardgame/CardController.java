@@ -1,14 +1,17 @@
 package com.app.Cardgame;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/cards")
@@ -21,16 +24,14 @@ public class CardController {
 		return "hello";
 	}
 
-	@PostMapping("/addcards")
-	public void addCards() {
-		cService.saveOrUpdate(new Card("dog", "perro"));
-		cService.saveOrUpdate(new Card("cat", "gato"));
-		cService.saveOrUpdate(new Card("flower", "flor"));
-	}
-
 	@GetMapping("/getall")
 	public Iterable<Card> getAll() {
 		return cService.findAll();
+	}
+
+	@GetMapping("/getallpictures")
+	public Iterable<Picture> getAllPictures() {
+		return cService.findAllPictures();
 	}
 
 	@GetMapping("/getbyid/{id}")
@@ -49,8 +50,10 @@ public class CardController {
 	}
 
 	@PostMapping("/save")
-	public void saveOrUpdate(@RequestBody Card card) {
-		cService.saveOrUpdate(card);
+	public void saveOrUpdate(@RequestParam(value = "english") String english,
+			@RequestParam(value = "spanish") String spanish, @RequestParam(value = "image") MultipartFile file)
+			throws IOException {
+		cService.saveOrUpdate(english, spanish, file);
 	}
 
 	@DeleteMapping("/deletebyid/{id}")
