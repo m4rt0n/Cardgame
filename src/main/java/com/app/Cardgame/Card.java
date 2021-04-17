@@ -1,13 +1,10 @@
 package com.app.Cardgame;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "cards")
 public class Card {
 
-	@Id
-	private String id;
 	private String english;
 	private String spanish;
 	private Picture picture;
@@ -19,14 +16,6 @@ public class Card {
 		this.english = english;
 		this.spanish = spanish;
 		this.picture = picture;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getEnglish() {
@@ -55,6 +44,6 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return String.format("Card[id=%s, english=%s, spanish=%s, picture=%s]", id, english, spanish, picture);
+		return String.format("Card[english=%s, spanish=%s, picture=%s]", english, spanish, picture);
 	}
 }
