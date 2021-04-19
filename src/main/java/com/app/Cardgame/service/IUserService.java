@@ -1,9 +1,15 @@
-package com.app.Cardgame;
+package com.app.Cardgame.service;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.app.Cardgame.model.Card;
+import com.app.Cardgame.model.CardNotFoundException;
+import com.app.Cardgame.model.Stack;
+import com.app.Cardgame.model.User;
+import com.app.Cardgame.model.UserNotFoundException;
 
 public interface IUserService {
 

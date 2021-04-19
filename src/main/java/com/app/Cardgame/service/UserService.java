@@ -1,13 +1,20 @@
-package com.app.Cardgame;
+package com.app.Cardgame.service;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.app.Cardgame.model.Card;
+import com.app.Cardgame.model.CardNotFoundException;
+import com.app.Cardgame.model.Picture;
+import com.app.Cardgame.model.Stack;
+import com.app.Cardgame.model.User;
+import com.app.Cardgame.model.UserNotFoundException;
+import com.app.Cardgame.repo.UserRepository;
 
 @Service
 public class UserService implements IUserService {
@@ -57,23 +64,13 @@ public class UserService implements IUserService {
 	public Card addCard(String userid, String english, String spanish, String title, MultipartFile file)
 			throws UserNotFoundException, IOException {
 		User user = repo.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
-		Stack stack = user.getStack();
 		String fileName = file.getOriginalFilename();
-		Binary image = new Binary(file.getBytes());
+		byte[] image = file.getBytes();
 		Picture picture = new Picture(fileName, image);
 		Card card = new Card(english, spanish, picture);
-		stack.addCard(card);
+		user.getStack().addCard(card);
 		repo.save(user);
 		return card;
-	}
-
-	boolean isEmpty(Object o) {
-		if (o == null) {
-			System.out.println(o.toString() + " is null!");
-			return true;
-		}
-		System.out.println(o.toString() + " is not null");
-		return false;
 	}
 
 	@Override
@@ -89,7 +86,7 @@ public class UserService implements IUserService {
 		User user = repo.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
 		Card findCard = user.getStack().getCardByEnglish(card.getEnglish());
 		String fileName = file.getOriginalFilename();
-		Binary image = new Binary(file.getBytes());
+		byte[] image = file.getBytes();
 		Picture picture = new Picture(fileName, image);
 		findCard.setPicture(picture);
 	}
@@ -108,8 +105,17 @@ public class UserService implements IUserService {
 	@Override
 	public Card makeCard(String english, String spanish, MultipartFile file) throws IOException {
 		String fileName = file.getOriginalFilename();
-		Binary image = new Binary(file.getBytes());
+		byte[] image = file.getBytes();
 		Picture picture = new Picture(fileName, image);
 		return new Card(english, spanish, picture);
+	}
+
+	boolean isEmpty(Object o) {
+		if (o == null) {
+			System.out.println(o.toString() + " is null!");
+			return true;
+		}
+		System.out.println(o.toString() + " is not null");
+		return false;
 	}
 }

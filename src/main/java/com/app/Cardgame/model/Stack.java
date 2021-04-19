@@ -1,4 +1,4 @@
-package com.app.Cardgame;
+package com.app.Cardgame.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,10 @@ public class Stack {
 
 	public void addCard(Card card) {
 		cards.add(card);
+	}
+
+	public void addCards(List<Card> cardList) {
+		cardList.stream().forEach(c -> cards.add(c));
 	}
 
 	public void removeCard(Card card) {

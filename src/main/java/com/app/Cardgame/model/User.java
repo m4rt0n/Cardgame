@@ -1,4 +1,4 @@
-package com.app.Cardgame;
+package com.app.Cardgame.model;
 
 import org.springframework.data.annotation.Id;
 

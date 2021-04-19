@@ -1,4 +1,4 @@
-package com.app.Cardgame;
+package com.app.Cardgame.model;
 
 public class PictureNotFoundException extends Exception {
 	public PictureNotFoundException(String param) {

@@ -1,4 +1,4 @@
-package com.app.Cardgame;
+package com.app.Cardgame.controller;
 
 import java.io.IOException;
 
@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.app.Cardgame.model.Card;
+import com.app.Cardgame.model.CardNotFoundException;
+import com.app.Cardgame.model.Stack;
+import com.app.Cardgame.model.User;
+import com.app.Cardgame.model.UserNotFoundException;
+import com.app.Cardgame.service.IUserService;
+
 @CrossOrigin(origins = { "http://localhost:3000" })
 @RestController
 @RequestMapping(path = "/users")
@@ -23,7 +30,7 @@ public class UserController {
 
 	@GetMapping("/hello")
 	public @ResponseBody String hello() {
-		return "hello";
+		return "hello from user controller";
 	}
 
 	@GetMapping("/getallusers")
