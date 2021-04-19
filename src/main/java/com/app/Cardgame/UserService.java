@@ -61,11 +61,9 @@ public class UserService implements IUserService {
 		String fileName = file.getOriginalFilename();
 		Binary image = new Binary(file.getBytes());
 		Picture picture = new Picture(fileName, image);
-		isEmpty(picture);
 		Card card = new Card(english, spanish, picture);
-		isEmpty(card);
 		stack.addCard(card);
-		isEmpty(stack.getCards());
+		repo.save(user);
 		return card;
 	}
 
