@@ -38,13 +38,13 @@ public class UserController {
 		return uService.findAllUsers();
 	}
 
-	@GetMapping("/getuserbyid/{id}")
-	public User getById(@PathVariable("id") String id) throws UserNotFoundException {
+	@GetMapping("/getuserbyid")
+	public User getById(@RequestParam(value = "id") String id) throws UserNotFoundException {
 		return uService.findUserById(id);
 	}
 
-	@GetMapping("/getuserbyusername/{username}")
-	public User getUserByUsername(@PathVariable("username") String username) throws UserNotFoundException {
+	@GetMapping("/getuserbyusername")
+	public User getUserByUsername(@RequestParam(value = "username") String username) throws UserNotFoundException {
 		return uService.findUserByUsername(username);
 	}
 

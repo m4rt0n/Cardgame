@@ -1,18 +1,19 @@
 package com.app.Cardgame.model;
 
+import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "pictures")
 public class Picture {
 
 	private String title;
-	private byte[] image;
+	private Binary image;
 
 	public Picture() {
 
 	}
 
-	public Picture(String title, byte[] image) {
+	public Picture(String title, Binary image) {
 		this.title = title;
 		this.image = image;
 	}
@@ -25,11 +26,11 @@ public class Picture {
 		this.title = title;
 	}
 
-	public byte[] getImage() {
+	public Binary getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
+	public void setImage(Binary image) {
 		this.image = image;
 	}
 

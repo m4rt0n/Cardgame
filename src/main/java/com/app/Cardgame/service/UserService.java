@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,7 +66,7 @@ public class UserService implements IUserService {
 			throws UserNotFoundException, IOException {
 		User user = repo.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
 		String fileName = file.getOriginalFilename();
-		byte[] image = file.getBytes();
+		Binary image = new Binary(file.getBytes());
 		Picture picture = new Picture(fileName, image);
 		Card card = new Card(english, spanish, picture);
 		user.getStack().addCard(card);
@@ -86,7 +87,7 @@ public class UserService implements IUserService {
 		User user = repo.findById(userid).orElseThrow(() -> new UserNotFoundException(userid));
 		Card findCard = user.getStack().getCardByEnglish(card.getEnglish());
 		String fileName = file.getOriginalFilename();
-		byte[] image = file.getBytes();
+		Binary image = new Binary(file.getBytes());
 		Picture picture = new Picture(fileName, image);
 		findCard.setPicture(picture);
 	}
@@ -105,7 +106,7 @@ public class UserService implements IUserService {
 	@Override
 	public Card makeCard(String english, String spanish, MultipartFile file) throws IOException {
 		String fileName = file.getOriginalFilename();
-		byte[] image = file.getBytes();
+		Binary image = new Binary(file.getBytes());
 		Picture picture = new Picture(fileName, image);
 		return new Card(english, spanish, picture);
 	}
