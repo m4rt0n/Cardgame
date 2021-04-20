@@ -32,6 +32,8 @@ public class GameService implements IGameService {
 	static String[] paths = { "D:\\Prog\\Cardgame\\images\\dog.jpg", "D:\\Prog\\Cardgame\\images\\cat.jpg",
 			"D:\\Prog\\Cardgame\\images\\sun.jpg", "D:\\Prog\\Cardgame\\images\\moon.jpg" };
 
+	private List<User> players = new ArrayList<User>();
+
 	public List<Picture> createPictures() throws IOException {
 		List<Picture> pictures = new ArrayList<Picture>();
 		for (String path : paths) {
@@ -67,17 +69,20 @@ public class GameService implements IGameService {
 		System.out.println("created: " + user2.toString());
 	}
 
-	public List<User> loadPlayersForGame(String u1id, String u2id) throws UserNotFoundException, CardNotFoundException {
+	public List<User> loadPlayers(String u1id, String u2id) throws UserNotFoundException, CardNotFoundException {
 		User u1 = uService.findUserByUsername("user1");
 		User u2 = uService.findUserByUsername("user2");
-		System.out.println(String.format("loaded users: \n %s \n& %s", u1.toString(), u2.toString()));
-		return Stream.of(u1, u2).collect(Collectors.toList());
+		System.out.println(String.format("loaded users: \n%s \n%s", u1.toString(), u2.toString()));
+		players = Stream.of(u1, u2).collect(Collectors.toList());
+		return players;
 	}
 
-	public void play(List<User> users) throws CardNotFoundException, UserNotFoundException {
+	@Override
+	public void startGame() throws CardNotFoundException, UserNotFoundException {
 
-		User u1 = users.get(0);
-		User u2 = users.get(1);
+		User u1 = players.get(0);
+		User u2 = players.get(1);
+		System.out.println(String.format("game started with users: \n%s, \n%s", u1.toString(), u2.toString()));
 		Scanner sc = new Scanner(System.in);
 		System.out.println("turn 1");
 		System.out.println("u1: pick a card (english)");

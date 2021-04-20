@@ -32,10 +32,15 @@ public class GameController {
 		gService.createPlayers();
 	}
 
-	@PostMapping("/loadplayersforgame")
-	public void loadPlayersForGame(@RequestParam(value = "u1id") String u1id, @RequestParam(value = "u2id") String u2id)
-			throws UserNotFoundException, CardNotFoundException {
-		gService.loadPlayersForGame(u1id, u2id);
+	@PostMapping("/loadplayers")
+	public void loadPlayers(@RequestParam(value = "player1id") String player1id,
+			@RequestParam(value = "player2id") String player2id) throws UserNotFoundException, CardNotFoundException {
+		gService.loadPlayers(player1id, player2id);
+	}
+
+	@PostMapping("/startgame")
+	public void startGame() throws CardNotFoundException, UserNotFoundException {
+		gService.startGame();
 	}
 
 }

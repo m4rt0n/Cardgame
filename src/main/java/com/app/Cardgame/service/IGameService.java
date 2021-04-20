@@ -8,7 +8,11 @@ import com.app.Cardgame.model.User;
 import com.app.Cardgame.model.UserNotFoundException;
 
 public interface IGameService {
-	public void createPlayers() throws IOException;
 
-	public List<User> loadPlayersForGame(String u1id, String u2id) throws UserNotFoundException, CardNotFoundException;
+	void createPlayers() throws IOException;
+
+	List<User> loadPlayers(String u1id, String u2id) throws UserNotFoundException, CardNotFoundException;
+
+	void startGame() throws CardNotFoundException, UserNotFoundException;
+
 }
