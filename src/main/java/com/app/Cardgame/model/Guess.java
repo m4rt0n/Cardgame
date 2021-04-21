@@ -3,14 +3,14 @@ package com.app.Cardgame.model;
 public class Guess {
 
 	private User user;
-	private String guess;
+	private String guessWord;
 
 	public Guess() {
 	};
 
-	public Guess(User user, String guess) {
+	public Guess(User user, String guessWord) {
 		this.user = user;
-		this.guess = guess;
+		this.guessWord = guessWord;
 	}
 
 	public User getUser() {
@@ -21,17 +21,17 @@ public class Guess {
 		this.user = user;
 	}
 
-	public String getGuess() {
-		return guess;
+	public String getGuessWord() {
+		return guessWord;
 	}
 
-	public void setGuess(String guess) {
-		this.guess = guess;
+	public void setGuessWord(String guess) {
+		this.guessWord = guess;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Guess[User=%s, guess=+s]", user, guess);
+		return String.format("Guess[User=%s, guess=%s]", user, guessWord);
 	}
 
 }

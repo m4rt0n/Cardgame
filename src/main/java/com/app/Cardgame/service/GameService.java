@@ -91,26 +91,29 @@ public class GameService implements IGameService {
 
 	@Override
 	public void check() {
+		String answer = turnGuess.getGuessWord();
+		String engQuestion = turnPick.getCard().getEnglish();
+		String espQuestion = turnPick.getCard().getSpanish();
+		Card pickedCard = turnPick.getCard();
+		User guesser = turnGuess.getUser();
+		String question;
+		System.out.println(String.format("card: %s", pickedCard.toString()));
+
 		if (turnPick.isAskedEnglish()) {
-			if (turnGuess.getGuess().equals(turnPick.getCard().getEnglish())) {
-				System.out.println("card guessed, picker's card added to guesser's stack");
-				Card guessed = turnPick.getCard();
-				User guesser = turnGuess.getUser();
-				guesser.getStack().addCard(guessed);
-				repo.save(guesser);
-			} else {
-				System.out.println("not guessed");
-			}
+			question = new String(engQuestion);
 		} else if (turnPick.isAskedSpanish()) {
-			if (turnGuess.getGuess().equals(turnPick.getCard().getSpanish())) {
-				System.out.println("card guessed, picker's card added to guesser's stack");
-				Card guessed = turnPick.getCard();
-				User guesser = turnGuess.getUser();
-				guesser.getStack().addCard(guessed);
-				repo.save(guesser);
-			} else {
-				System.out.println("not guessed");
-			}
+			question = new String(espQuestion);
+		} else {
+			question = new String("problem with question");
+		}
+
+		System.out.println(String.format("question: %s : answer: %s", question, answer));
+		if (answer.equals(question)) {
+			System.out.println("card guessed, picker's card added to guesser's stack");
+			guesser.getStack().addCard(pickedCard);
+			repo.save(guesser);
+		} else {
+			System.out.println("not guessed");
 		}
 		turnPick = null;
 		turnGuess = null;
