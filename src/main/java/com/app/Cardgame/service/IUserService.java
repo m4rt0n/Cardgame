@@ -21,7 +21,9 @@ public interface IUserService {
 
 	User saveOrUpdateUser(String username, String password, String email);
 
-	Card getCardFromUser(String userid, String cardid) throws UserNotFoundException, CardNotFoundException;
+	Card getCardByEnglish(String userid, String english) throws UserNotFoundException, CardNotFoundException;
+
+	Card getCardBySpanish(String userid, String spanish) throws UserNotFoundException, CardNotFoundException;
 
 	Card makeCard(String english, String spanish, MultipartFile file) throws IOException;
 

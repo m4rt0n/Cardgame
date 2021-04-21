@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.app.Cardgame.model.Card;
 import com.app.Cardgame.model.CardNotFoundException;
+import com.app.Cardgame.model.Guess;
+import com.app.Cardgame.model.Pick;
 import com.app.Cardgame.model.Picture;
 import com.app.Cardgame.model.User;
 import com.app.Cardgame.model.UserNotFoundException;
@@ -83,22 +84,66 @@ public class GameService implements IGameService {
 		User u1 = players.get(0);
 		User u2 = players.get(1);
 		System.out.println(String.format("game started with users: \n%s, \n%s", u1.toString(), u2.toString()));
-		Scanner sc = new Scanner(System.in);
-		System.out.println("turn 1");
-		System.out.println("u1: pick a card (english)");
-		String u1pick = sc.nextLine();
-		Card u1Card = u1.getStack().getCardByEnglish(u1pick);
-		System.out.println("u1 picked card: " + u1Card.getEnglish());
-		System.out.println("u2 turn: guess u1 card (spanish)");
-		String u2guess = sc.nextLine();
-		if (u1Card.getSpanish().equals(u2guess)) {
-			System.out.println("u2 guessed u1 card - card added to u2 stack");
-			u2.getStack().addCard(u1Card);
-			repo.save(u2);
-		} else {
-			System.out.println("u2 didn't guess u1 card");
-		}
+	}
 
+	Pick turnPick;
+	Guess turnGuess;
+
+	@Override
+	public void check() {
+		if (turnPick.isAskedEnglish()) {
+			if (turnGuess.getGuess().equals(turnPick.getCard().getEnglish())) {
+				System.out.println("card guessed, picker's card added to guesser's stack");
+				Card guessed = turnPick.getCard();
+				User guesser = turnGuess.getUser();
+				guesser.getStack().addCard(guessed);
+				repo.save(guesser);
+			} else {
+				System.out.println("not guessed");
+			}
+		} else if (turnPick.isAskedSpanish()) {
+			if (turnGuess.getGuess().equals(turnPick.getCard().getSpanish())) {
+				System.out.println("card guessed, picker's card added to guesser's stack");
+				Card guessed = turnPick.getCard();
+				User guesser = turnGuess.getUser();
+				guesser.getStack().addCard(guessed);
+				repo.save(guesser);
+			} else {
+				System.out.println("not guessed");
+			}
+		}
+		turnPick = null;
+		turnGuess = null;
+	}
+
+	@Override
+	public Pick createPick(String uid, String english, String ask) throws UserNotFoundException, CardNotFoundException {
+		User user = uService.findUserById(uid);
+		Card card = user.getStack().getCardByEnglish(english);
+		Pick pick = new Pick(user, card);
+		setPickAskState(pick, ask);
+		System.out.println(pick.toString());
+		turnPick = pick;
+		return pick;
+	}
+
+	@Override
+	public Guess createGuess(String uid, String guessWord) throws UserNotFoundException {
+		User user = uService.findUserById(uid);
+		Guess guess = new Guess(user, guessWord);
+		System.out.println(guess.toString());
+		turnGuess = guess;
+		return guess;
+	}
+
+	public void setPickAskState(Pick pick, String ask) {
+		if (ask.equals("english")) {
+			pick.setAskedEnglish(true);
+		} else if (ask.equals("spanish")) {
+			pick.setAskedSpanish(true);
+		} else {
+			System.out.println("'ask' field should be either 'english' or 'spanish'");
+		}
 	}
 
 }

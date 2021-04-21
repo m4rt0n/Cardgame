@@ -40,8 +40,14 @@ public class Stack {
 		return card.orElseThrow(() -> new CardNotFoundException(english));
 	}
 
+	public Card getCardBySpanish(String spanish) throws CardNotFoundException {
+		Optional<Card> card = cards.stream().filter(c -> c.getSpanish().equals(spanish)).findFirst();
+		return card.orElseThrow(() -> new CardNotFoundException(spanish));
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Stack[cards=%s]", cards);
 	}
+
 }

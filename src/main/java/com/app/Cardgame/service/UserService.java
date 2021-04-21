@@ -46,11 +46,19 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public Card getCardFromUser(String userid, String english) throws UserNotFoundException, CardNotFoundException {
+	public Card getCardByEnglish(String userid, String english) throws UserNotFoundException, CardNotFoundException {
 		List<User> uList = repo.findAll();
 		User user = uList.stream().filter(u -> u.getId().equals(userid)).findFirst()
 				.orElseThrow(() -> new UserNotFoundException(userid));
 		return user.getStack().getCardByEnglish(english);
+	}
+
+	@Override
+	public Card getCardBySpanish(String userid, String spanish) throws UserNotFoundException, CardNotFoundException {
+		List<User> uList = repo.findAll();
+		User user = uList.stream().filter(u -> u.getId().equals(userid)).findFirst()
+				.orElseThrow(() -> new UserNotFoundException(userid));
+		return user.getStack().getCardBySpanish(spanish);
 	}
 
 	@Override

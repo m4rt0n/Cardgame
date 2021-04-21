@@ -33,9 +33,9 @@ public class GameController {
 	}
 
 	@PostMapping("/loadplayers")
-	public void loadPlayers(@RequestParam(value = "player1id") String player1id,
-			@RequestParam(value = "player2id") String player2id) throws UserNotFoundException, CardNotFoundException {
-		gService.loadPlayers(player1id, player2id);
+	public void loadPlayers(@RequestParam(value = "user1id") String user1id,
+			@RequestParam(value = "user2id") String user2id) throws UserNotFoundException, CardNotFoundException {
+		gService.loadPlayers(user1id, user2id);
 	}
 
 	@PostMapping("/startgame")
@@ -43,4 +43,20 @@ public class GameController {
 		gService.startGame();
 	}
 
+	@PostMapping("/pick")
+	public void pick(@RequestParam(value = "userid") String userid, @RequestParam(value = "english") String english,
+			@RequestParam(value = "ask") String ask) throws UserNotFoundException, CardNotFoundException {
+		gService.createPick(userid, english, ask);
+	}
+
+	@PostMapping("/guess")
+	public void guess(@RequestParam(value = "userid") String userid, @RequestParam(value = "guess") String guess)
+			throws UserNotFoundException {
+		gService.createGuess(userid, guess);
+	}
+
+	@PostMapping("/check")
+	public void check() {
+		gService.check();
+	}
 }

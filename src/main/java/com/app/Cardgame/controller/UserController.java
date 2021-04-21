@@ -59,10 +59,16 @@ public class UserController {
 		return uService.getStackFromUser(userid);
 	}
 
-	@GetMapping("/getcardfromuser")
-	public Card getCardFromUser(@RequestParam(value = "userid") String userid,
+	@GetMapping("/getcardbyenglish")
+	public Card getCardByEnglish(@RequestParam(value = "userid") String userid,
 			@RequestParam(value = "english") String english) throws UserNotFoundException, CardNotFoundException {
-		return uService.getCardFromUser(userid, english);
+		return uService.getCardByEnglish(userid, english);
+	}
+
+	@GetMapping("/getcardbyspanish")
+	public Card getCardBySpanish(@RequestParam(value = "userid") String userid,
+			@RequestParam(value = "spanish") String spanish) throws UserNotFoundException, CardNotFoundException {
+		return uService.getCardBySpanish(userid, spanish);
 	}
 
 	@PostMapping("/addcard")
