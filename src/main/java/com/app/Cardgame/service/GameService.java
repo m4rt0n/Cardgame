@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,9 +16,11 @@ import org.springframework.stereotype.Service;
 
 import com.app.Cardgame.model.Card;
 import com.app.Cardgame.model.CardNotFoundException;
+import com.app.Cardgame.model.Game;
 import com.app.Cardgame.model.Guess;
 import com.app.Cardgame.model.Pick;
 import com.app.Cardgame.model.Picture;
+import com.app.Cardgame.model.Turn;
 import com.app.Cardgame.model.User;
 import com.app.Cardgame.model.UserNotFoundException;
 import com.app.Cardgame.repo.UserRepository;
@@ -32,8 +35,6 @@ public class GameService implements IGameService {
 
 	static String[] paths = { "D:\\Prog\\Cardgame\\images\\dog.jpg", "D:\\Prog\\Cardgame\\images\\cat.jpg",
 			"D:\\Prog\\Cardgame\\images\\sun.jpg", "D:\\Prog\\Cardgame\\images\\moon.jpg" };
-
-	private List<User> players = new ArrayList<User>();
 
 	public List<Picture> createPictures() throws IOException {
 		List<Picture> pictures = new ArrayList<Picture>();
@@ -70,58 +71,29 @@ public class GameService implements IGameService {
 		System.out.println("created: " + user2.toString());
 	}
 
+	private List<User> players = new ArrayList();
+
 	public List<User> loadPlayers(String u1id, String u2id) throws UserNotFoundException, CardNotFoundException {
-		User u1 = uService.findUserByUsername("user1");
-		User u2 = uService.findUserByUsername("user2");
+		User u1 = uService.findUserById(u1id);
+		User u2 = uService.findUserById(u2id);
 		System.out.println(String.format("loaded users: \n%s \n%s", u1.toString(), u2.toString()));
 		players = Stream.of(u1, u2).collect(Collectors.toList());
 		return players;
 	}
 
+	Game thisGame;
+
 	@Override
 	public void startGame() throws CardNotFoundException, UserNotFoundException {
-
 		User u1 = players.get(0);
 		User u2 = players.get(1);
+		thisGame = new Game(u1, u2);
 		System.out.println(String.format("game started with users: \n%s, \n%s", u1.toString(), u2.toString()));
-	}
-
-	Pick turnPick;
-	Guess turnGuess;
-
-	@Override
-	public void check() {
-		String answer = turnGuess.getGuessWord();
-		String engQuestion = turnPick.getCard().getEnglish();
-		String espQuestion = turnPick.getCard().getSpanish();
-		Card pickedCard = turnPick.getCard();
-		User guesser = turnGuess.getUser();
-		String question;
-		System.out.println(String.format("card: %s", pickedCard.toString()));
-
-		if (turnPick.isAskedEnglish()) {
-			question = new String(engQuestion);
-		} else if (turnPick.isAskedSpanish()) {
-			question = new String(espQuestion);
-		} else {
-			question = new String("problem with question");
-		}
-
-		System.out.println(String.format("question: %s : answer: %s", question, answer));
-		if (answer.equals(question)) {
-			System.out.println("card guessed, picker's card added to guesser's stack");
-			guesser.getStack().addCard(pickedCard);
-			repo.save(guesser);
-		} else {
-			System.out.println("not guessed");
-		}
-		turnPick = null;
-		turnGuess = null;
 	}
 
 	@Override
 	public Pick createPick(String uid, String english, String ask) throws UserNotFoundException, CardNotFoundException {
-		User user = uService.findUserById(uid);
+		User user = players.stream().filter(u -> u.getId().equals(uid)).findFirst().get();
 		Card card = user.getStack().getCardByEnglish(english);
 		Pick pick = new Pick(user, card);
 		setPickAskState(pick, ask);
@@ -132,7 +104,7 @@ public class GameService implements IGameService {
 
 	@Override
 	public Guess createGuess(String uid, String guessWord) throws UserNotFoundException {
-		User user = uService.findUserById(uid);
+		User user = players.stream().filter(u -> u.getId().equals(uid)).findFirst().get();
 		Guess guess = new Guess(user, guessWord);
 		System.out.println(guess.toString());
 		turnGuess = guess;
@@ -147,6 +119,58 @@ public class GameService implements IGameService {
 		} else {
 			System.out.println("'ask' field should be either 'english' or 'spanish'");
 		}
+	}
+
+	Turn thisTurn;
+	Pick turnPick;
+	Guess turnGuess;
+
+	@Override
+	public void checkTurn() {
+
+		String answer = turnGuess.getGuessWord();
+		String engQuestion = turnPick.getCard().getEnglish();
+		String espQuestion = turnPick.getCard().getSpanish();
+		Card pickedCard = turnPick.getCard();
+		User guesser = turnGuess.getUser();
+		String question;
+		String result;
+		HashMap<User, Integer> thisPoints = thisGame.getPoints();
+		System.out.println(String.format("card: %s", pickedCard.toString()));
+
+		if (turnPick.isAskedEnglish()) {
+			question = new String(engQuestion);
+		} else if (turnPick.isAskedSpanish()) {
+			question = new String(espQuestion);
+		} else {
+			question = new String("problem with question");
+		}
+
+		thisTurn = new Turn(turnPick, turnGuess);
+		System.out.println(String.format("question: %s : answer: %s", question, answer));
+		if (answer.equals(question)) {
+			result = (String.format("player: %s guessed card: %s", guesser.getUsername(), pickedCard));
+			thisGame.getWonCards().add(pickedCard);
+
+			int points = thisPoints.get(guesser);
+			thisPoints.put(guesser, points++);
+			System.out.println(
+					String.format("user: %s gained a point - current points: s%", guesser.getUsername(), points));
+		} else {
+			result = (String.format("player: %s did not guess card: %s", guesser.getUsername(), pickedCard));
+		}
+		System.out.println(result);
+		thisTurn.setResult(result);
+		thisGame.getTurns().add(thisTurn);
+		System.out.println(String.format("game turn %s saved", thisGame.getTurns().size()));
+		turnPick = null;
+		turnGuess = null;
+		thisTurn = null;
+	}
+
+	@Override
+	public void finishgame() {
+
 	}
 
 }

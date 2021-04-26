@@ -21,6 +21,8 @@ public interface IGameService {
 
 	Guess createGuess(String uid, String suess) throws UserNotFoundException;
 
-	void check();
+	void checkTurn();
+
+	void finishgame();
 
 }

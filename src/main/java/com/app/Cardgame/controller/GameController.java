@@ -55,8 +55,13 @@ public class GameController {
 		gService.createGuess(userid, guess);
 	}
 
-	@PostMapping("/check")
+	@PostMapping("/checkturn")
 	public void check() {
-		gService.check();
+		gService.checkTurn();
+	}
+
+	@PostMapping("/finishgame")
+	public void finishGame() {
+		gService.finishgame();
 	}
 }
